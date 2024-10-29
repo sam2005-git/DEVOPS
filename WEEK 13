@@ -1,0 +1,159 @@
+1. Install Docker
+Linux: Follow the installation instructions specific to your distribution.
+Mac: Download and install Docker Desktop from Docker's official site.
+Windows: Also use Docker Desktop for Windows.
+After installation, run docker --version to check that Docker is installed correctly.
+2. Basic Docker Commands
+Check Docker Version:
+bash
+Copy code
+docker --version
+Run the Docker Hello World:
+bash
+Copy code
+docker run hello-world
+This command pulls and runs a test image to check that Docker is working correctly.
+3. Docker Images
+List Images:
+
+bash
+Copy code
+docker images
+Pull an Image from Docker Hub:
+
+bash
+Copy code
+docker pull <image_name>
+For example, docker pull ubuntu pulls the Ubuntu image from Docker Hub.
+
+Remove an Image:
+
+bash
+Copy code
+docker rmi <image_id_or_name>
+4. Docker Containers
+Run a Container:
+bash
+Copy code
+docker run <image_name>
+To run a container interactively, add -it:
+bash
+Copy code
+docker run -it <image_name> /bin/bash
+List Running Containers:
+bash
+Copy code
+docker ps
+List All Containers:
+bash
+Copy code
+docker ps -a
+Stop a Container:
+bash
+Copy code
+docker stop <container_id>
+Start/Restart a Container:
+bash
+Copy code
+docker start <container_id>
+docker restart <container_id>
+Remove a Container:
+bash
+Copy code
+docker rm <container_id>
+5. Dockerfile and Building Images
+A Dockerfile is used to define the steps for building a Docker image.
+
+Create a Dockerfile:
+Dockerfile
+Copy code
+# Sample Dockerfile
+FROM ubuntu:latest
+RUN apt-get update && apt-get install -y python3
+COPY . /app
+WORKDIR /app
+CMD ["python3", "app.py"]
+Build an Image from a Dockerfile:
+bash
+Copy code
+docker build -t <image_name> .
+Tagging the Image with a Version:
+bash
+Copy code
+docker build -t <image_name>:<version> .
+6. Running a Docker Container from an Image
+Run a Container in Detached Mode:
+bash
+Copy code
+docker run -d <image_name>
+Expose Ports:
+bash
+Copy code
+docker run -p <host_port>:<container_port> <image_name>
+For example, docker run -p 5000:5000 myapp makes the container’s port 5000 accessible on port 5000 of the host.
+7. Networking
+Create a Docker Network:
+bash
+Copy code
+docker network create <network_name>
+Run a Container on a Network:
+bash
+Copy code
+docker run --network <network_name> <image_name>
+Connect an Existing Container to a Network:
+bash
+Copy code
+docker network connect <network_name> <container_name>
+8. Docker Volumes (Data Persistence)
+Create a Volume:
+bash
+Copy code
+docker volume create <volume_name>
+Attach a Volume to a Container:
+bash
+Copy code
+docker run -v <volume_name>:/path/in/container <image_name>
+Bind Mount (for Local Development):
+bash
+Copy code
+docker run -v $(pwd):/path/in/container <image_name>
+9. Docker Compose (for Multi-Container Applications)
+Create a docker-compose.yml File:
+yaml
+Copy code
+version: '3'
+services:
+  app:
+    image: myapp
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+Run Docker Compose:
+bash
+Copy code
+docker-compose up
+Run Docker Compose in Detached Mode:
+bash
+Copy code
+docker-compose up -d
+Stop Docker Compose:
+bash
+Copy code
+docker-compose down
+10. Dockerfile Best Practices
+Use Multi-Stage Builds for Smaller Images:
+Dockerfile
+Copy code
+FROM node:14 AS builder
+WORKDIR /app
+COPY . .
+RUN npm install && npm run build
+
+FROM nginx
+COPY --from=builder /app/build /usr/share/nginx/html
